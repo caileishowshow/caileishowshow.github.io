@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://caileishowshow.github.io/atom.xml" rel="self"/>
+  <link href="http://caileishowshow.github.io/"/>
+  <updated>2015-07-26T00:38:17+08:00</updated>
+  <id>http://caileishowshow.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[我的第一篇微博]]></title>
+    <link href="http://caileishowshow.github.io/blog/2015/07/25/title/"/>
+    <updated>2015-07-25T23:49:37+08:00</updated>
+    <id>http://caileishowshow.github.io/blog/2015/07/25/title</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+</feed>
