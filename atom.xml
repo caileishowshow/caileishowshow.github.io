@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://caileishowshow.github.io/atom.xml" rel="self"/>
   <link href="http://caileishowshow.github.io/"/>
-  <updated>2015-07-27T22:40:15+08:00</updated>
+  <updated>2015-07-27T22:42:41+08:00</updated>
   <id>http://caileishowshow.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -18,9 +18,11 @@
     <link href="http://caileishowshow.github.io/blog/2015/07/25/title/"/>
     <updated>2015-07-25T23:49:37+08:00</updated>
     <id>http://caileishowshow.github.io/blog/2015/07/25/title</id>
-    <content type="html"><![CDATA[<p>折腾了两天，终于把github的博客系统调上线了，参考了一些他人的经验，另外又加上自己的摸索，现在也算可以在线上进行访问了。接下来也把这些记录下来。
-关于博客，以前一直觉得自己想写一些东西，但是有时候一写又不知道写点什么，以前也整理过很多开发经验、细节等，但是由于一些原因（好吧其实是懒）没有记录下来，争取能积累点东西。
-PS：吐槽下新开的天猫超市，说是25日送过来，结果现在还没到，看在50元优惠券的份上，就不在说啥了</p>
+    <content type="html"><![CDATA[<p>折腾了两天，终于把github的博客系统调上线了，参考了一些他人的经验，另外又加上自己的摸索，现在也算可以在线上进行访问了。接下来也把这些记录下来。</p>
+
+<p>关于博客，以前一直觉得自己想写一些东西，但是有时候一写又不知道写点什么，以前也整理过很多开发经验、细节等，但是由于一些原因（好吧其实是懒）没有记录下来，争取能积累点东西。</p>
+
+<p>PS：吐槽下新开的天猫超市，说是25日送过来，结果现在还没到，看在50元优惠券的份上，就不在说啥了</p>
 ]]></content>
   </entry>
   
