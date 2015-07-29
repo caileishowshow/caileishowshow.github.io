@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://caileishowshow.github.io/atom.xml" rel="self"/>
   <link href="http://caileishowshow.github.io/"/>
-  <updated>2015-07-27T23:15:14+08:00</updated>
+  <updated>2015-07-29T23:27:18+08:00</updated>
   <id>http://caileishowshow.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ios runtime 学习笔记（一）]]></title>
+    <link href="http://caileishowshow.github.io/blog/2015/07/29/title/"/>
+    <updated>2015-07-29T23:24:41+08:00</updated>
+    <id>http://caileishowshow.github.io/blog/2015/07/29/title</id>
+    <content type="html"><![CDATA[<p>runtime 一直是iOS 开发中的一个难点，其实，在对于一般开发过程中，肯能用到runtime 的机会并不是特别多，但是对于整个系统的了解，以及对于包括程序整体的学习，了解相关的逻辑也是很有必要的，特别是在面试的过程中经常会被问道一些细节，而现在网上一些人也写过类似的教程，但是其中有很多的出入，因此趁这个机会在总结一下。
+说到runtime 首先都是说ObjC是一个动态语言，在程序运行时会将他的代码转成C的代码。</p>
+
+<h3>runtime 的用途</h3>
+
+<p>用来实现一些用ObjC无法实现的功能，包括动态生成类，动态插入方法，动态修改方法等，总之体现了一个动态的效果。
+runtime 是苹果提供的一套类库，目前是被苹果开源的，<a href="http://www.opensource.apple.com/source/objc4/objc4-646/">此处可以下载</a>到完整的工程文件，一般我们在项目中导入的
+    #import &lt;objc/runtime.h>
+都是他编译好的库，我们只能看见几个头文件，包括runtime.h等等，因此如果想要研究其原理，还是需要下载一份代码。</p>
+
+<h3>源码结构</h3>
+
+<p>打开源码文件夹，里面有一个runtime的文件夹，里面就是实现runtime功能的所有代码。包括头文件和实现文件，其中很多的实现文件都是以.mm结尾的。</p>
+
+<h4>哪个是执行文件</h4>
+
+<p>在runtime.h中，可以找下面这段代码</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/// An opaque type that represents an Objective-C class.
+</span><span class='line'>typedef struct objc_class *Class;
+</span><span class='line'>
+</span><span class='line'>/// Represents an instance of a class.
+</span><span class='line'>struct objc_object {
+</span><span class='line'>    Class isa  OBJC_ISA_AVAILABILITY;
+</span><span class='line'>};
+</span><span class='line'>
+</span><span class='line'>/// A pointer to an instance of a class.
+</span><span class='line'>typedef struct objc_object *id;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以Class其实是一个objc_class的结构体，而点击objc_class，如果在工程中，会打开runtime.h 文件的objc_class 定义</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>struct objc_class {
+</span><span class='line'>    Class isa  OBJC_ISA_AVAILABILITY;
+</span><span class='line'>
+</span><span class='line'>#if !__OBJC2__
+</span><span class='line'>    Class super_class                                        OBJC2_UNAVAILABLE;
+</span><span class='line'>    const char *name                                         OBJC2_UNAVAILABLE;
+</span><span class='line'>    long version                                             OBJC2_UNAVAILABLE;
+</span><span class='line'>    long info                                                OBJC2_UNAVAILABLE;
+</span><span class='line'>    long instance_size                                       OBJC2_UNAVAILABLE;
+</span><span class='line'>    struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;
+</span><span class='line'>    struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;
+</span><span class='line'>    struct objc_cache *cache                                 OBJC2_UNAVAILABLE;
+</span><span class='line'>    struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;
+</span><span class='line'>#endif
+</span><span class='line'>
+</span><span class='line'>} OBJC2_UNAVAILABLE;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>恩，也是一个结构体，不过看到很多的OBJC2_UNAVAILABLE，表示在Objective-C 2.0中不支持，是的，这个结构体是不是在Objective-C 2.0中可用的。那到底是怎么回事呢。
+如果在源代码中，会打开一个objc-runtime-new.h文件，其实，这个才是真正runtime生成和执行的文件代码，另外，在目录里面还有个objc-runtime-old.h文件，一个new一个old文件具体有什么区别呢。
+在objc-private.h中有这样一段代码</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#if __OBJC2__
+</span><span class='line'>#include "objc-runtime-new.h"
+</span><span class='line'>#else
+</span><span class='line'>#include "objc-runtime-old.h"
+</span><span class='line'>#endif
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这就明白了，在Objective-C 2.0中，引入的时objc-runtime-new.h 这个文件，而以前版本中引入的时objc-runtime-old.h 这个版本的文件
+记得在刚开始学习iOS开发时，就听说过这样一句话“Objective-C 2.0 是一次大的重构”，如今看看这两个文件，应该就更好理解这句话了。
+打开objc-runtime-new.mm 文件，洋洋洒洒近7000行代码，这些代码构成了runtime.h中的大部分功能，接下来进一步研究一下这个庞大的文件函数堆</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[搭建Octopress博客相关(一)]]></title>
