@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://caileishowshow.github.io/atom.xml" rel="self"/>
   <link href="http://caileishowshow.github.io/"/>
-  <updated>2015-07-30T23:22:51+08:00</updated>
+  <updated>2015-08-21T22:56:45+08:00</updated>
   <id>http://caileishowshow.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,47 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[title]]></title>
+    <link href="http://caileishowshow.github.io/blog/2015/08/21/title/"/>
+    <updated>2015-08-21T22:52:14+08:00</updated>
+    <id>http://caileishowshow.github.io/blog/2015/08/21/title</id>
+    <content type="html"><![CDATA[<h2>WebViewJavascriptBridge笔记</h2>
+
+<p>WebViewJavascriptBridge是一个用来进行javascript和ios代码交互的第三方库</p>
+
+<h3>Objective-C端</h3>
+
+<p>//初始化
+<em>bridge = [WebViewJavascriptBridge bridgeForWebView:</em>webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) {
+//设置响应返回的结果
+}];
+创建了一个WebViewJavascriptBridge对象，调用对象的初始化方法，传入一个响应的webView，由于该第三方库复写了UIWebView的代理，因此如果要设置代理中的方法则设置代理，第三个回调函数为javascript调用方法的响应。</p>
+
+<h3>javascript端初始化</h3>
+
+<p>function connectWebViewJavascriptBridge(callback) {
+if (window.WebViewJavascriptBridge) {
+callback(WebViewJavascriptBridge);
+} else {
+document.addEventListener(&lsquo;WebViewJavascriptBridgeReady&rsquo;, function() {callback(WebViewJavascriptBridge);}, false);
+}
+}
+connectWebViewJavascriptBridge(function(bridge) {
+bridge.init(function(message, responseCallback) {
+})
+});
+javascript的初始化代码用这种固定格式即可，首先创建一个connectWebViewJavascriptBridge的方法，在web页面中注册一个WebViewJavascriptBridgeReady，进行接收，当接收到消息时，返回回调方法。</p>
+
+<h3>javascript 向Objective-C 发送消息</h3>
+
+<p>在connectWebViewJavascriptBridge 中加入以下方法</p>
+
+<p>bridge.send(&ldquo;test&rdquo;);
+则在最上端注册的_bridge的回调函数就能接收到</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[GVUserDefaults学习笔记]]></title>
