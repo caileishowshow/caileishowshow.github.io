@@ -1,0 +1,64 @@
+---
+layout: post
+title: "CAShapeLayer动画笔记"
+date: 2015-08-31 00:08:33 +0800
+comments: true
+categories: CAShapeLayer
+---
+一般来说，在程序开发过程中，想要各种动画效果，可以通过UIView的animation方法调整UIView的frame等方式进行操作，或者是在CALayer中进行操作。而如果要进行动态折线等的绘制时，单纯的使用UIView就不行了，就需要使用CAShapeLayer来进行绘制了。
+
+CAShapeLayer是CALayer的子类，创建的方式与一般的CALayer相同
+
+```
+	CAShapeLayer *layer = [CAShapeLayer layer];
+	layer.frame = self.view.frame;//也需要指定Frame
+```
+CAShapeLayer可以被认为一个容器，或者一个画板，我们可以在上面绘制各种形状，特别是一些不规则的形状，并且，CAShaperLayer提供了一些自身的属性值，如下图，用来设置图形的填充，边框颜色等。
+
+![image](http://edsioon.me/wordpress/wp-content/uploads/2014/10/CAShapeLayerProperty.png)
+
+一般在CAShaperLayer中进行形状绘制会用到贝塞尔曲线。
+在iOS中，为我们提供了一个封装好的类UIBezierPath，该类封装了一些基本的方法用来创建简单的几何图形
+
+```
+	_trackPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:	(self.bounds.size.width - _progressWidth)/ 2 startAngle:0 endAngle:M_PI * 2 	clockwise:YES];//画矩形
+	 _progressPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:	(self.bounds.size.width - _progressWidth)/ 2 startAngle:- M_PI_2 endAngle:	(M_PI * 2) * _progress - M_PI_2 clockwise:YES]; //画圆形
+```
+
+也可以用来绘制路径
+
+```
+	//绘制路径的代码
+    UIBezierPath *_bezierpath = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(20, 20)];
+    [path addLineToPoint:CGPointMake(40, 300)];
+    [path addLineToPoint:CGPointMake(300, 50)];
+```
+最后将绘制的路径添加到CAShapLayer上即可，具体事例如下
+
+```
+    CAShapeLayer *layer = [CAShapeLayer layer];
+    layer.frame = self.view.frame;
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(20, 20)];
+    [path addLineToPoint:CGPointMake(40, 300)];
+    [path addLineToPoint:CGPointMake(300, 50)];
+    layer.fillColor = nil;//设置填充颜色，如果不为空，那么layer会把路径自动闭合
+    layer.strokeColor   = [UIColor greenColor].CGColor;
+    
+    layer.path = path.CGPath;
+    [self.view.layer addSublayer:layer];
+	
+```
+####关于动画
+在上图中CAShaperLayer中有两个属性 strokeStart，strokeEnd。0~1的float型，用来表示起始的百分比和结束的百分比
+例如，
+当strokeStart为0，strokeEnd为1表示从0开始到1结尾的整个路径
+```
+    shapeLayer.strokeStart = 0;
+    shapeLayer.strokeEnd = 0.25;
+```
+显示四分之一个圆
+因此我们可以CABasicAnimation修改动画的方式来做出可以动的动画
+
