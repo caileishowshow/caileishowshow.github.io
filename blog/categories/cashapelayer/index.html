@@ -3,12 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>title - My Octopress Blog</title>
+	<title>Category: cashapelayer - My Octopress Blog</title>
 	<meta name="author" content="Your Name">
 
 	
-	<meta name="description" content="WebViewJavascriptBridge笔记 WebViewJavascriptBridge是一个用来进行javascript和ios代码交互的第三方库 Objective-C端 //初始化
-bridge = [WebViewJavascriptBridge bridgeForWebView &hellip;">
+	<meta name="description" content="Category: cashapelayer">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -74,72 +73,31 @@ bridge = [WebViewJavascriptBridge bridgeForWebView &hellip;">
 	
 		
 	
-	<div id="content" class="inner"><article class="post">
-	<h2 class="title">Title</h2>
-	<div class="entry-content"><h2>WebViewJavascriptBridge笔记</h2>
-
-<p>WebViewJavascriptBridge是一个用来进行javascript和ios代码交互的第三方库</p>
-
-<h3>Objective-C端</h3>
-
-<p>//初始化
-<em>bridge = [WebViewJavascriptBridge bridgeForWebView:</em>webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) {
-//设置响应返回的结果
-}];
-创建了一个WebViewJavascriptBridge对象，调用对象的初始化方法，传入一个响应的webView，由于该第三方库复写了UIWebView的代理，因此如果要设置代理中的方法则设置代理，第三个回调函数为javascript调用方法的响应。</p>
-
-<h3>javascript端初始化</h3>
-
-<p>function connectWebViewJavascriptBridge(callback) {
-if (window.WebViewJavascriptBridge) {
-callback(WebViewJavascriptBridge);
-} else {
-document.addEventListener(&lsquo;WebViewJavascriptBridgeReady&rsquo;, function() {callback(WebViewJavascriptBridge);}, false);
-}
-}
-connectWebViewJavascriptBridge(function(bridge) {
-bridge.init(function(message, responseCallback) {
-})
-});
-javascript的初始化代码用这种固定格式即可，首先创建一个connectWebViewJavascriptBridge的方法，在web页面中注册一个WebViewJavascriptBridgeReady，进行接收，当接收到消息时，返回回调方法。</p>
-
-<h3>javascript 向Objective-C 发送消息</h3>
-
-<p>在connectWebViewJavascriptBridge 中加入以下方法</p>
-
-<p>bridge.send(&ldquo;test&rdquo;);
-则在最上端注册的_bridge的回调函数就能接收到</p>
-</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-Aug 21st, 2015</div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/ios/'>ios</a>
-
-
-</div>
+	<div id="content" class="inner">
 	
-</div>
-</article>
 
-	<div class="share">
-	<div class="addthis_toolbox addthis_default_style ">
-		
-		
-		
-		
+
+	
+	
+	<section class="archives"><h1 class="year">2015</h1>
+
+<article>
+	<h2 class="title"><a href="/blog/2015/08/31/cashapelayer/">CAShapeLayer动画笔记</a></h2>
+	<div class="meta">
+		<div class="date">Aug 31</div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cashapelayer/'>cashapelayer</a>
+
+
+</div>
+	    
 	</div>
+</article>
 	
-</div>
-
+	</section>
+	
 
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015

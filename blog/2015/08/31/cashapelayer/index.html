@@ -1,0 +1,210 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>CAShapeLayer动画笔记 - My Octopress Blog</title>
+	<meta name="author" content="Your Name">
+
+	
+	<meta name="description" content="一般来说，在程序开发过程中，想要各种动画效果，可以通过UIView的animation方法调整UIView的frame等方式进行操作，或者是在CALayer中进行操作。而如果要进行动态折线等的绘制时，单纯的使用UIView就不行了，就需要使用CAShapeLayer来进行绘制了。 &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">My Octopress Blog</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:caileishowshow.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:caileishowshow.github.io">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">CAShapeLayer动画笔记</h2>
+	<div class="entry-content"><p>一般来说，在程序开发过程中，想要各种动画效果，可以通过UIView的animation方法调整UIView的frame等方式进行操作，或者是在CALayer中进行操作。而如果要进行动态折线等的绘制时，单纯的使用UIView就不行了，就需要使用CAShapeLayer来进行绘制了。</p>
+
+<p>CAShapeLayer是CALayer的子类，创建的方式与一般的CALayer相同</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CAShapeLayer *layer = [CAShapeLayer layer];
+</span><span class='line'>layer.frame = self.view.frame;//也需要指定Frame</span></code></pre></td></tr></table></div></figure>
+
+
+<p>CAShapeLayer可以被认为一个容器，或者一个画板，我们可以在上面绘制各种形状，特别是一些不规则的形状，并且，CAShaperLayer提供了一些自身的属性值，如下图，用来设置图形的填充，边框颜色等。</p>
+
+<p><img src="http://edsioon.me/wordpress/wp-content/uploads/2014/10/CAShapeLayerProperty.png" alt="image" /></p>
+
+<p>一般在CAShaperLayer中进行形状绘制会用到贝塞尔曲线。
+在iOS中，为我们提供了一个封装好的类UIBezierPath，该类封装了一些基本的方法用来创建简单的几何图形</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>_trackPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:   (self.bounds.size.width - _progressWidth)/ 2 startAngle:0 endAngle:M_PI * 2     clockwise:YES];//画矩形
+</span><span class='line'> _progressPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:    (self.bounds.size.width - _progressWidth)/ 2 startAngle:- M_PI_2 endAngle:  (M_PI * 2) * _progress - M_PI_2 clockwise:YES]; //画圆形</span></code></pre></td></tr></table></div></figure>
+
+
+<p>也可以用来绘制路径</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//绘制路径的代码
+</span><span class='line'>UIBezierPath *_bezierpath = [UIBezierPath bezierPath];
+</span><span class='line'>[path moveToPoint:CGPointMake(20, 20)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(40, 300)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(300, 50)];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后将绘制的路径添加到CAShapLayer上即可，具体事例如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CAShapeLayer *layer = [CAShapeLayer layer];
+</span><span class='line'>layer.frame = self.view.frame;
+</span><span class='line'>
+</span><span class='line'>UIBezierPath *path = [UIBezierPath bezierPath];
+</span><span class='line'>[path moveToPoint:CGPointMake(20, 20)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(40, 300)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(300, 50)];
+</span><span class='line'>layer.fillColor = nil;//设置填充颜色，如果不为空，那么layer会把路径自动闭合
+</span><span class='line'>layer.strokeColor   = [UIColor greenColor].CGColor;
+</span><span class='line'>
+</span><span class='line'>layer.path = path.CGPath;
+</span><span class='line'>[self.view.layer addSublayer:layer];
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>关于动画</h4>
+
+<p>在上图中CAShaperLayer中有两个属性 strokeStart，strokeEnd。0~1的float型，用来表示起始的百分比和结束的百分比
+例如，
+当strokeStart为0，strokeEnd为1表示从0开始到1结尾的整个路径</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>shapeLayer.strokeStart = 0;
+</span><span class='line'>shapeLayer.strokeEnd = 0.25;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>显示四分之一个圆
+因此我们可以CABasicAnimation修改动画的方式来做出可以动的动画</p>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+Aug 31st, 2015</div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cashapelayer/'>cashapelayer</a>
+
+
+</div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		
+		
+	</div>
+	
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    Your Name
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>

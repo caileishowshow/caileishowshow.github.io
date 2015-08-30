@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://caileishowshow.github.io/atom.xml" rel="self"/>
   <link href="http://caileishowshow.github.io/"/>
-  <updated>2015-08-21T22:56:45+08:00</updated>
+  <updated>2015-08-31T00:11:16+08:00</updated>
   <id>http://caileishowshow.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -14,43 +14,90 @@
 
   
   <entry>
-    <title type="html"><![CDATA[title]]></title>
-    <link href="http://caileishowshow.github.io/blog/2015/08/21/title/"/>
-    <updated>2015-08-21T22:52:14+08:00</updated>
-    <id>http://caileishowshow.github.io/blog/2015/08/21/title</id>
-    <content type="html"><![CDATA[<h2>WebViewJavascriptBridge笔记</h2>
+    <title type="html"><![CDATA[CAShapeLayer动画笔记]]></title>
+    <link href="http://caileishowshow.github.io/blog/2015/08/31/cashapelayer/"/>
+    <updated>2015-08-31T00:08:33+08:00</updated>
+    <id>http://caileishowshow.github.io/blog/2015/08/31/cashapelayer</id>
+    <content type="html"><![CDATA[<p>一般来说，在程序开发过程中，想要各种动画效果，可以通过UIView的animation方法调整UIView的frame等方式进行操作，或者是在CALayer中进行操作。而如果要进行动态折线等的绘制时，单纯的使用UIView就不行了，就需要使用CAShapeLayer来进行绘制了。</p>
 
-<p>WebViewJavascriptBridge是一个用来进行javascript和ios代码交互的第三方库</p>
+<p>CAShapeLayer是CALayer的子类，创建的方式与一般的CALayer相同</p>
 
-<h3>Objective-C端</h3>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CAShapeLayer *layer = [CAShapeLayer layer];
+</span><span class='line'>layer.frame = self.view.frame;//也需要指定Frame</span></code></pre></td></tr></table></div></figure>
 
-<p>//初始化
-<em>bridge = [WebViewJavascriptBridge bridgeForWebView:</em>webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) {
-//设置响应返回的结果
-}];
-创建了一个WebViewJavascriptBridge对象，调用对象的初始化方法，传入一个响应的webView，由于该第三方库复写了UIWebView的代理，因此如果要设置代理中的方法则设置代理，第三个回调函数为javascript调用方法的响应。</p>
 
-<h3>javascript端初始化</h3>
+<p>CAShapeLayer可以被认为一个容器，或者一个画板，我们可以在上面绘制各种形状，特别是一些不规则的形状，并且，CAShaperLayer提供了一些自身的属性值，如下图，用来设置图形的填充，边框颜色等。</p>
 
-<p>function connectWebViewJavascriptBridge(callback) {
-if (window.WebViewJavascriptBridge) {
-callback(WebViewJavascriptBridge);
-} else {
-document.addEventListener(&lsquo;WebViewJavascriptBridgeReady&rsquo;, function() {callback(WebViewJavascriptBridge);}, false);
-}
-}
-connectWebViewJavascriptBridge(function(bridge) {
-bridge.init(function(message, responseCallback) {
-})
-});
-javascript的初始化代码用这种固定格式即可，首先创建一个connectWebViewJavascriptBridge的方法，在web页面中注册一个WebViewJavascriptBridgeReady，进行接收，当接收到消息时，返回回调方法。</p>
+<p><img src="http://edsioon.me/wordpress/wp-content/uploads/2014/10/CAShapeLayerProperty.png" alt="image" /></p>
 
-<h3>javascript 向Objective-C 发送消息</h3>
+<p>一般在CAShaperLayer中进行形状绘制会用到贝塞尔曲线。
+在iOS中，为我们提供了一个封装好的类UIBezierPath，该类封装了一些基本的方法用来创建简单的几何图形</p>
 
-<p>在connectWebViewJavascriptBridge 中加入以下方法</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>_trackPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:   (self.bounds.size.width - _progressWidth)/ 2 startAngle:0 endAngle:M_PI * 2     clockwise:YES];//画矩形
+</span><span class='line'> _progressPath = [UIBezierPath bezierPathWithArcCenter:self.center radius:    (self.bounds.size.width - _progressWidth)/ 2 startAngle:- M_PI_2 endAngle:  (M_PI * 2) * _progress - M_PI_2 clockwise:YES]; //画圆形</span></code></pre></td></tr></table></div></figure>
 
-<p>bridge.send(&ldquo;test&rdquo;);
-则在最上端注册的_bridge的回调函数就能接收到</p>
+
+<p>也可以用来绘制路径</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//绘制路径的代码
+</span><span class='line'>UIBezierPath *_bezierpath = [UIBezierPath bezierPath];
+</span><span class='line'>[path moveToPoint:CGPointMake(20, 20)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(40, 300)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(300, 50)];</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后将绘制的路径添加到CAShapLayer上即可，具体事例如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>CAShapeLayer *layer = [CAShapeLayer layer];
+</span><span class='line'>layer.frame = self.view.frame;
+</span><span class='line'>
+</span><span class='line'>UIBezierPath *path = [UIBezierPath bezierPath];
+</span><span class='line'>[path moveToPoint:CGPointMake(20, 20)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(40, 300)];
+</span><span class='line'>[path addLineToPoint:CGPointMake(300, 50)];
+</span><span class='line'>layer.fillColor = nil;//设置填充颜色，如果不为空，那么layer会把路径自动闭合
+</span><span class='line'>layer.strokeColor   = [UIColor greenColor].CGColor;
+</span><span class='line'>
+</span><span class='line'>layer.path = path.CGPath;
+</span><span class='line'>[self.view.layer addSublayer:layer];
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>关于动画</h4>
+
+<p>在上图中CAShaperLayer中有两个属性 strokeStart，strokeEnd。0~1的float型，用来表示起始的百分比和结束的百分比
+例如，
+当strokeStart为0，strokeEnd为1表示从0开始到1结尾的整个路径</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>shapeLayer.strokeStart = 0;
+</span><span class='line'>shapeLayer.strokeEnd = 0.25;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>显示四分之一个圆
+因此我们可以CABasicAnimation修改动画的方式来做出可以动的动画</p>
 ]]></content>
   </entry>
   
